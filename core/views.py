@@ -7,12 +7,13 @@ from django. db.models import Q
 from .forms import RoomForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth. forms import UserCreationForm
 def loginpage(request):
     page = 'login'
     if request. user.is_authenticated:
         return redirect ('home')
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         try:
             user = User.objects.get(username=username)
@@ -33,9 +34,22 @@ def logoutUser(request):
     logout(request)
     return redirect('home')
 
-def registerpage(request):
+def registerPage(request):
+    form =UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+
+        else:
+            messages.error(request, 'an error occured during regesteraton')
+            
     page = 'register'
-    context = {'page':page}
+    context = {'page':page, 'form':form}
     return render(request, 'core/reg_login.html', context)
     
 def home(request):
