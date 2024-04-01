@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Room,Topic,Messages
-from django. db.models import Q
+from django. db.models import Q 
 from .forms import RoomForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
@@ -62,15 +62,15 @@ def home(request):
     )
     topics = Topic.objects.all()
     room_count = rooms.count()
-    
-    context = {'rooms':rooms, 'topics':topics, 'room_count':room_count }
+    room_msgz = Messages.objects.filter(Q(room__topic__name__icontains=q))
+    context = {'rooms':rooms, 'topics':topics, 'room_count':room_count,'room_msgz':room_msgz }
     return  render(request,'core/home.html',context  )
 
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    room_messages = room.messages_set.all().order_by('-created')
-    
+    room_messages = room.messages_set.all()
+    participants = room.participants.all()
     if request.method == 'POST':
         message = Messages.objects.create(
             user= request.user,
@@ -78,10 +78,11 @@ def room(request, pk):
             body=request.POST.get('body'),
             
         )
+        room.participants.add(request.user)
         return redirect('room',pk=room.id)
     
         
-    context = {'room': room,'room_messages':room_messages}
+    context = {'room': room,'room_messages':room_messages, 'participants':participants}
     return  render(request,'core/rooms.html',context)
 
 @login_required(login_url='login')
@@ -120,3 +121,14 @@ def deleteRoom(request, pk):
         room.delete()
         return redirect('home')
     return render(request, 'core/delete.html',{'object':room})
+
+
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    msg = Messages.objects.get(id=pk)
+    if request.user != msg.user:
+        return HttpResponse('You cant delete')
+    if request.method == 'POST':
+        msg.delete()
+        return redirect(' ')
+    return render(request, 'core/delete.html',{'object':msg})
