@@ -111,6 +111,14 @@ def updatedRoom(request,pk):
     context = {'form':form}
     return render (request, 'core/room_form.html',context)
 
+def userProfile(request,pk):
+    user = User.objects.get(id=pk)
+    topics = Topic.objects.all()
+    rooms = user.room_set.all()
+    room_msgz = user.messages_set.all()
+    
+    context = {'user':user,'rooms':rooms,'room_msgz':room_msgz,'topics':topics}
+    return render (request, 'core/profile.html',context)
 
 @login_required(login_url='login')
 def deleteRoom(request, pk):
