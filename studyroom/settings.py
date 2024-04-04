@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d8lg(r0lyl4&b6z=9!yja+mo6%t8584op@to)j8ew3#gl@j95i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app','now.sh','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -89,13 +89,14 @@ WSGI_APPLICATION = 'studyroom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'rQXnLTtTXIBzCyugsGXfXfxxJmEiXGsp',
-        'HOST': 'viaduct.proxy.rlwy.net',
-        'PORT': '41385',
+        'NAME': 'verceldb',
+        'USER': 'default',
+        'PASSWORD': 'EzYCecZ5QBA4',
+        'HOST': 'ep-curly-bonus-a4oa5065-pooler.us-east-1.aws.neon.tech',
+        # 'PORT': '41385',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
