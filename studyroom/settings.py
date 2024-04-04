@@ -93,7 +93,7 @@ DATABASES = {
         'USER': 'default',
         'PASSWORD': 'EzYCecZ5QBA4',
         'HOST': 'ep-curly-bonus-a4oa5065-pooler.us-east-1.aws.neon.tech',
-        # 'PORT': '41385',
+        'PORT': '5432',
     }
 }
 
